@@ -41,7 +41,7 @@ cvs.addEventListener('click', function(evt) {
             state.current = state.game;
             break;
         case state.game:
-            // bird.flap();
+            bird.flap();
             break;
         case state.over:
             state.current = state.getReady;
@@ -104,9 +104,19 @@ const bird = {
     },
 
     //bird flap function
-    // flap: function() {
-    //     if(state.current == state.get)
-    // }
+    flap: function() {
+
+    },
+
+
+    update: function() {
+        //If the game state is get ready , the bird flap slowly
+        this.period = state.current == state.getReady ? 10 : 5;
+        //w eincrement the frame by 1, each period
+        this.frame += frames % this.period == 0 ? 1 : 0;
+        //Frame goes from 0 To 4, then again to 0
+        this.frame = this.frame % this.animation.length;
+    }
 
 }
 
@@ -161,7 +171,7 @@ function draw() {
 
 //UPDATE
 function update() {
-
+    bird.update()
 }
 
 
