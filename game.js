@@ -98,14 +98,19 @@ const bird = {
 
     frame: 0,
     //bird draw function
+
+    gravity: 0.25,
+    jump: 4.6,
+    speed: 0,
+
     draw: function() {
         let bird = this.animation[this.frame];
-        ctx.drawImage(img, bird.sX, bird.sY, this.w, this.h, this.x - this.w, this.y - this.h, this.w, this.h);
+        ctx.drawImage(img, bird.sX, bird.sY, this.w, this.h, this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
     },
 
     //bird flap function
     flap: function() {
-
+        this.speed = -this.jump;
     },
 
 
@@ -116,6 +121,26 @@ const bird = {
         this.frame += frames % this.period == 0 ? 1 : 0;
         //Frame goes from 0 To 4, then again to 0
         this.frame = this.frame % this.animation.length;
+
+        if (state.current == state.getReady) {
+            this.y = 150; //Reset Position of the bird after game over
+        } else {
+            this.speed += this.gravity;
+            this.y += this.speed;
+
+            //game over when collision with foreground
+            if (this.y + this.h / 2 >= cvs.height - fg.h) {
+                this.y = cvs.height - fg.h - this.h / 2; // remains in foreground
+                this.speed = 0;
+                if (state.current == state.game) {
+                    state.current = state.over;
+
+
+                }
+
+            }
+        }
+
     }
 
 }
@@ -148,7 +173,7 @@ const gameOver = {
     y: 90,
 
     draw: function() {
-        if (state.current == state.gameOver) {
+        if (state.current == state.over) {
             ctx.drawImage(img, this.sX, this.sY, this.w, this.h, this.x, this.y, this.w, this.h);
 
         }
