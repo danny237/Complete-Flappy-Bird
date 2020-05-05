@@ -23,6 +23,32 @@ let frames = 0;
 const img = new Image()
 img.src = "img/sprite.png"
 
+
+
+
+//Game State 
+const state = {
+    current: 0,
+    getReady: 0,
+    game: 1,
+    over: 2,
+}
+
+//Control the game
+cvs.addEventListener('click', function(evt) {
+    switch (state.current) {
+        case state.getReady:
+            state.current = state.game;
+            break;
+        case state.game:
+            // bird.flap();
+            break;
+        case state.over:
+            state.current = state.getReady;
+            break;
+    }
+})
+
 //Background
 
 const bg = {
@@ -62,9 +88,62 @@ const bird = {
         { sX: 276, sY: 112 },
         { sX: 276, sY: 139 },
         { sX: 276, sY: 164 },
+        { sX: 276, sY: 139 },
     ],
+
+    x: 50,
+    y: 150,
+    w: 34,
+    h: 26,
+
+    frame: 0,
+    //bird draw function
+    draw: function() {
+        let bird = this.animation[this.frame];
+        ctx.drawImage(img, bird.sX, bird.sY, this.w, this.h, this.x - this.w, this.y - this.h, this.w, this.h);
+    },
+
+    //bird flap function
+    // flap: function() {
+    //     if(state.current == state.get)
+    // }
+
 }
 
+//Get ready message
+const getReady = {
+    sX: 0,
+    sY: 288,
+    w: 173,
+    h: 152,
+    x: cvs.width / 2 - 173 / 2,
+    y: 80,
+
+    draw: function() {
+        if (state.current == state.getReady) {
+            ctx.drawImage(img, this.sX, this.sY, this.w, this.h, this.x, this.y, this.w, this.h)
+
+        }
+    }
+}
+
+
+//Game Over message
+const gameOver = {
+    sX: 175,
+    sY: 228,
+    w: 225,
+    h: 202,
+    x: cvs.width / 2 - 225 / 2,
+    y: 90,
+
+    draw: function() {
+        if (state.current == state.gameOver) {
+            ctx.drawImage(img, this.sX, this.sY, this.w, this.h, this.x, this.y, this.w, this.h);
+
+        }
+    }
+}
 
 
 //DRAW
@@ -73,8 +152,11 @@ function draw() {
     ctx.fillStyle = "#70c5ce";
     ctx.fillRect(0, 0, cvs.width, cvs.height);
 
-    bg.draw()
-    fg.draw()
+    bg.draw();
+    fg.draw();
+    bird.draw();
+    gameOver.draw();
+    getReady.draw();
 }
 
 //UPDATE
