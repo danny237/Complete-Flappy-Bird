@@ -44,6 +44,8 @@ cvs.addEventListener('click', function(evt) {
             bird.flap();
             break;
         case state.over:
+            pipes.position = []
+
             state.current = state.getReady;
             break;
     }
@@ -102,6 +104,8 @@ const bird = {
     y: 150,
     w: 34,
     h: 26,
+
+    radius: 12,
 
     frame: 0,
     //bird draw function
@@ -213,7 +217,7 @@ const pipes = {
 
     w: 53,
     h: 400,
-    gap: 85,
+    gap: 90,
     maxYPos: -150,
     dx: 2,
 
@@ -243,6 +247,25 @@ const pipes = {
         for (let i = 0; i < this.position.length; i++) {
             let p = this.position[i];
 
+
+            let bottomPipeYpos = p.y + this.h + this.gap;
+
+            //Collision Detection
+
+            //TOP pipe
+            if (bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w &&
+                bird.y + bird.radius > p.y && bird.y - bird.radius < p.y + this.h) {
+                state.current = state.over;
+            }
+
+            //Bottom Pipe
+            if (bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w &&
+                bird.y + bird.radius > bottomPipeYpos && bird.y - bird.radius < bottomPipeYpos + this.h) {
+                state.current = state.over;
+            }
+
+
+            //Move piecs to the lefe
             p.x -= this.dx;
 
             //if the pipes goes beyond canvas, we delete them from the array
