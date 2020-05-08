@@ -10,20 +10,24 @@ const DEGREE = Math.PI / 180;
 
 
 //LOAD SPRITE IMAGE
-
-
-
-
-
-
-
-
-
-//Image
 const img = new Image()
 img.src = "img/sprite.png"
 
+// LOAD SOUNDS
+const SCORE_S = new Audio();
+SCORE_S.src = "audio/sfx_point.wav";
 
+const FLAP = new Audio();
+FLAP.src = "audio/sfx_flap.wav";
+
+const HIT = new Audio();
+HIT.src = "audio/sfx_hit.wav";
+
+const SWOOSHING = new Audio();
+SWOOSHING.src = "audio/sfx_swooshing.wav";
+
+const DIE = new Audio();
+DIE.src = "audio/sfx_die.wav";
 
 
 //Game State 
@@ -46,9 +50,11 @@ cvs.addEventListener('click', function(evt) {
     switch (state.current) {
         case state.getReady:
             state.current = state.game;
+            SWOOSHING.play();
             break;
         case state.game:
             bird.flap();
+            FLAP.play();
             break;
         case state.over:
             let rect = cvs.getBoundingClientRect();
@@ -168,6 +174,7 @@ const bird = {
                 this.speed = 0;
                 if (state.current == state.game) {
                     state.current = state.over;
+                    HIT.play();
                 }
 
             }
@@ -236,7 +243,7 @@ const pipes = {
 
     w: 53,
     h: 400,
-    gap: 90,
+    gap: 100,
     maxYPos: -150,
     dx: 2,
 
@@ -275,12 +282,14 @@ const pipes = {
             if (bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w &&
                 bird.y + bird.radius > p.y && bird.y - bird.radius < p.y + this.h) {
                 state.current = state.over;
+                HIT.play()
             }
 
             //Bottom Pipe
             if (bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w &&
                 bird.y + bird.radius > bottomPipeYpos && bird.y - bird.radius < bottomPipeYpos + this.h) {
                 state.current = state.over;
+                HIT.play()
             }
 
 
